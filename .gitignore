@@ -35,3 +35,5 @@ __pycache__/*
 *.venv
 *.pyc
 
+serviceAccountKey.json
+block-chain-security-b31946bcfda0.json
