@@ -35,6 +35,8 @@ __pycache__/*
 *.venv
 *.pyc
 
+backend/serviceAccountKey.json
+
 .env
 # Environment variables
 .env.local
