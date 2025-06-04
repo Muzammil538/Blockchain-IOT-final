@@ -18,7 +18,7 @@ CORS(app, supports_credentials=True, origins=["http://localhost:3000"], allow_he
 blockchain = Blockchain()
 
 # Firebase Configuration
-# cred = credentials.Certificate("./serviceAccountKey.json")
+cred = credentials.Certificate("./serviceAccountKey.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
