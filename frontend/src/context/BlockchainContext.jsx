@@ -88,3 +88,5 @@ export function BlockchainProvider({ children }) {
 export function useBlockchain() {
   return useContext(BlockchainContext)
 }
+
+export { BlockchainContext }

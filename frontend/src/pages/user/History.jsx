@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../../hooks/useAuth';
-import { getUserUploads } from '../../../services/api';
-import { formatTimestamp, formatFileSize } from '../../../utils/helpers';
-import { usePagination } from '../../../hooks/usePagination';
-import DataTable from '../../../components/user/DataTable';
+import { useAuth } from '../../hooks/useAuth';
+import { getUserUploads } from '../../services/api';
+import { formatTimestamp, formatFileSize } from '../../utils/helpers';
+import { usePagination } from '../../hooks/usePagination';
+import DataTable from '../../pages/admin/DataTable';
 
 export default function History() {
   const { currentUser } = useAuth();

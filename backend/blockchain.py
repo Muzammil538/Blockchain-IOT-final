@@ -14,6 +14,17 @@ class Block:
     def calculate_hash(self):
         block_string = f"{self.index}{self.previous_hash}{self.timestamp}{json.dumps(self.data)}"
         return hashlib.sha256(block_string.encode()).hexdigest()
+    
+    def to_dict(self):
+        # Make sure all values are JSON serializable!
+        return {
+            "index": self.index,
+            "timestamp": self.timestamp,
+            "data": self.data,
+            "previous_hash": self.previous_hash,
+            "hash": self.hash,
+            # Add any other simple fields you have
+        }
 
 class Blockchain:
     def __init__(self):

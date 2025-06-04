@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../hooks/useAuth';
-import { adminGetAllUploads, adminGetAllUsers } from '../../../services/api';
-import StatsCard from '../../../components/admin/StatsCard';
-import RecentActivity from '../../../components/admin/RecentActivity';
-import DataChart from '../../../components/admin/DataChart';
-import { formatFileSize } from '../../../utils/helpers';
+import { adminGetAllUploads, adminGetAllUsers } from '../../services/api';
+import StatsCard from '../../components/admin/StatsCard';
+import RecentActivity from '../../components/admin/RecentActivity';
+import DataChart from '../../components/admin/DataChart';
+import { formatFileSize } from '../../utils/helpers';
 
 export default function AdminDashboard() {
   const { currentUser } = useAuth();

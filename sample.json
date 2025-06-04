@@ -1,0 +1,11 @@
+{
+  "text": "Hello, World!",
+  "number": 42,
+  "boolean": true,
+  "array": [1, 2, 3],
+  "object": {
+    "key1": "value1",
+    "key2": "value2"
+  },
+  "nullValue": null
+}

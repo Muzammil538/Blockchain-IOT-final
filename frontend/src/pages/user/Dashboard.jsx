@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../../hooks/useAuth';
-import { getUserUploads } from '../../../services/api';
-import { formatFileSize } from '../../../utils/helpers';
-import StatsCard from '../../../components/dashboard/StatsCard';
-import RecentUploads from '../../../components/dashboard/RecentUploads';
+import { useAuth } from '../../hooks/useAuth';
+import { getUserUploads } from '../../services/api';
+import { formatFileSize } from '../../utils/helpers';
+import StatsCard from '../../components/dashboard/StatsCard';
+
+import RecentUploads from '../../components/dashboard/RecentUploads';
 
 export default function Dashboard() {
   const { currentUser } = useAuth();

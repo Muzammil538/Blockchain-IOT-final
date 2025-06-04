@@ -1,7 +1,7 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/'
 
 export const getBlockchainData = async () => {
-  const response = await fetch(`${API_URL}/blockchain`)
+  const response = await fetch(`http://localhost:5000/api/blockchain`)
   if (!response.ok) {
     throw new Error('Failed to fetch blockchain data')
   }

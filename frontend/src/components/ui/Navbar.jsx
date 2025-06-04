@@ -11,7 +11,9 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' }
+    { name: 'Contact', path: '/contact' },
+    { name: 'Upload', path: '/upload' },
+    { name: 'Verify', path: '/verify' },
   ];
 
   const authLinks = currentUser

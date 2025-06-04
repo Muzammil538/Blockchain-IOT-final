@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useAuth } from '../../../hooks/useAuth';
-import { useUpload } from '../../../hooks/useUpload';
-import { FILE_TYPES } from '../../../utils/constants';
-import { validateFile } from '../../../utils/helpers';
+import { useAuth } from '../../hooks/useAuth';
+import { useUpload } from '..//../hooks/useUpload';
+import { FILE_TYPES } from '../../utils/constants';
+import { validateFile, formatFileSize } from '../../utils/helpers';
 
 export default function Upload() {
   const { currentUser } = useAuth();

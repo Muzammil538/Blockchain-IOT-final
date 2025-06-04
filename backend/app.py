@@ -12,13 +12,13 @@ load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True, origins=["http://localhost:3000"], allow_headers=["Content-Type", "Authorization"])
 
 # Initialize Blockchain
 blockchain = Blockchain()
 
 # Firebase Configuration
-cred = credentials.Certificate("serviceAccountKey.json")
+cred = credentials.Certificate("./serviceAccountKey.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -35,8 +35,10 @@ def verify_firebase_token(id_token):
         decoded_token = auth.verify_id_token(id_token)
         return decoded_token
     except Exception as e:
+        print("Token verification failed:", e)
         return None
-
+    
+    
 # API Routes
 @app.route('/api/register', methods=['POST'])
 def register():
@@ -48,13 +50,36 @@ def login():
     # Implementation for user login
     pass
 
+@app.route('/api/blockchain', methods=['GET', 'POST'])
+def get_chain():
+    # Convert each block to a dictionary
+    chain_data = [block.to_dict() for block in blockchain.chain]
+    return jsonify({
+        "chain": chain_data,
+        "length": len(chain_data)
+    }), 200
+
+@app.route('/api/users/<uid>/uploads', methods=['GET'])
+def get_current_user_uploads(uid):
+    # Optionally, verify the user's token here for security
+    user_ref = db.collection('users').document(uid)
+    uploads_ref = user_ref.collection('uploads')
+    uploads = [doc.to_dict() for doc in uploads_ref.stream()]
+    return jsonify(uploads), 200
+
+
 @app.route('/api/upload', methods=['POST'])
 def upload_data():
-    # Verify user token
-    id_token = request.headers.get('Authorization')
+    auth_header = request.headers.get('Authorization')
+    print('Authorization header:', auth_header)  # Debug
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return jsonify({"success": False, "error": "Unauthorized"}), 401
+
+    id_token = auth_header.split('Bearer ')[1]
     decoded_token = verify_firebase_token(id_token)
+    print('Decoded token:', decoded_token)  # Debug
     if not decoded_token:
-        return jsonify({"error": "Unauthorized"}), 401
+        return jsonify({"success": False, "error": "Unauthorized"}), 401
     
     # Get uploaded file
     file = request.files.get('file')
@@ -71,7 +96,7 @@ def upload_data():
         "timestamp": upload_result['created_at'],
         "data_hash": data_hash,
         "url": upload_result['secure_url'],
-        "format": upload_result['format'],
+        "format": upload_result.get('format', upload_result.get('resource_type', 'unknown')),
         "size": upload_result['bytes']
     }
     

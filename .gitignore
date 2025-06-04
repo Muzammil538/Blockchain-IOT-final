@@ -23,4 +23,15 @@ dist-ssr
 *.sln
 *.sw?
 
+# Python cache files
+__pycache__/*
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg-info
+*.eggs
+*.whl
+*.venv
+*.pyc
 

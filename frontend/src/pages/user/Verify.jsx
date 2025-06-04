@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useAuth } from '../../../hooks/useAuth';
-import { useUpload } from '../../../hooks/useUpload';
-import { useBlockchain } from '../../../hooks/useBlockchain';
-import { formatTimestamp } from '../../../utils/helpers';
+import { useAuth } from '../../hooks/useAuth';
+import { useUpload } from '../../hooks/useUpload';
+import { useBlockchain } from '../../hooks/useBlockchain';
+import { formatTimestamp } from '../../utils/helpers';
 
 export default function Verify() {
   const { currentUser } = useAuth();

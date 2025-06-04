@@ -32,6 +32,20 @@ const apiRequest = async (endpoint, method = 'GET', body = null, token = null) =
   }
 };
 
+export const uploadFile = (file, token) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  return fetch(`${API_BASE_URL}/upload`, {
+    method: 'POST',
+    headers: {
+      ...(token && { 'Authorization': `Bearer ${token}` })
+      // Do NOT set Content-Type to multipart/form-data; browser will set it
+    },
+    body: formData
+  }).then(handleResponse);
+};
+
 export const registerUser = (userData) => apiRequest('/register', 'POST', userData);
 export const loginUser = (credentials) => apiRequest('/login', 'POST', credentials);
 export const getUserProfile = (userId, token) => apiRequest(`/users/${userId}`, 'GET', null, token);
