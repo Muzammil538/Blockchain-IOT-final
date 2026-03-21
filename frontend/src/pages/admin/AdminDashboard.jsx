@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 import { adminGetAllUploads, adminGetAllUsers } from '../../services/api';
-import StatsCard from '../../components/admin/StatsCard';
-import RecentActivity from '../../components/admin/RecentActivity';
-import DataChart from '../../components/admin/DataChart';
+import StatsCard from '../../components/dashboard/StatsCard';
+import RecentActivity from './RecentActivity';
+import DataChart from '../../components/dashboard/DataChart';
 import { formatFileSize } from '../../utils/helpers';
 
 export default function AdminDashboard() {

@@ -87,7 +87,7 @@ export function AuthProvider({ children }) {
     login,
     register,
     logout,
-    isAdmin: currentUser?.email === 'admin@iotblockchain.com' // Simple admin check
+    isAdmin: currentUser?.email === 'admin123@gmail.com' // Simple admin check
   }
 
   return (

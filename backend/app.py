@@ -7,6 +7,8 @@ import cloudinary.uploader
 from blockchain import Blockchain
 import os
 from dotenv import load_dotenv
+from datetime import datetime
+
 
 load_dotenv()
 
@@ -18,7 +20,7 @@ CORS(app, supports_credentials=True, origins=["http://localhost:3000"], allow_he
 blockchain = Blockchain()
 
 # Firebase Configuration
-cred = credentials.Certificate("./serviceAccountKey.json")
+cred = credentials.Certificate("./serviceAccountKey1.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -42,13 +44,34 @@ def verify_firebase_token(id_token):
 # API Routes
 @app.route('/api/register', methods=['POST'])
 def register():
-    # Implementation for user registration
-    pass
+    pass 
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    # Implementation for user login
-    pass
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return jsonify({"error": "Unauthorized"}), 401
+    id_token = auth_header.split('Bearer ')[1]
+    decoded_token = verify_firebase_token(id_token)
+    if not decoded_token:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    # Ensure user exists in Firestore
+    user_ref = db.collection('users').document(decoded_token['uid'])
+    user_doc = user_ref.get()
+    if not user_doc.exists:
+        # Create user document if it doesn't exist
+        user_ref.set({
+            "email": decoded_token.get('email'),
+            "created_at": datetime.now().isoformat()
+        })
+    else:
+        # Optionally update last login time
+        user_ref.update({
+            "last_login": datetime.now().isoformat()
+        })
+
+    return jsonify({"success": True, "uid": decoded_token['uid'], "email": decoded_token.get('email')})
 
 @app.route('/api/blockchain', methods=['GET', 'POST'])
 def get_chain():
@@ -146,26 +169,54 @@ def verify_data():
 
 @app.route('/api/user/uploads', methods=['GET'])
 def get_user_uploads():
-    # Verify user token
-    id_token = request.headers.get('Authorization')
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return jsonify({"error": "Unauthorized"}), 401
+    id_token = auth_header.split('Bearer ')[1]
     decoded_token = verify_firebase_token(id_token)
     if not decoded_token:
         return jsonify({"error": "Unauthorized"}), 401
-    
-    # Get user uploads
+
     uploads_ref = db.collection('users').document(decoded_token['uid']).collection('uploads')
     uploads = [doc.to_dict() for doc in uploads_ref.get()]
-    
     return jsonify(uploads)
+
+@app.route('/api/admin/users', methods=['GET', 'OPTIONS'])
+def get_all_users():
+    if request.method == 'OPTIONS':
+        return '', 200
+    try:
+        # Verify admin token
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({"error": "Unauthorized"}), 401
+        id_token = auth_header.split('Bearer ')[1]
+        decoded_token = verify_firebase_token(id_token)
+        if not decoded_token or decoded_token.get('email') != 'admin123@gmail.com':
+            return jsonify({"error": "Unauthorized"}), 401
+
+        # Get all users
+        users = []
+        users_ref = db.collection('users')
+        for user in users_ref.get():
+            user_data = user.to_dict()
+            user_data['user_id'] = user.id
+            users.append(user_data)
+        return jsonify(users)
+    except Exception as e:
+        print("Admin users error:", e)
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/api/admin/uploads', methods=['GET'])
 def get_all_uploads():
     # Verify admin token
-    id_token = request.headers.get('Authorization')
-    decoded_token = verify_firebase_token(id_token)
-    if not decoded_token or not decoded_token.get('admin', False):
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
         return jsonify({"error": "Unauthorized"}), 401
-    
+    id_token = auth_header.split('Bearer ')[1]
+    decoded_token = verify_firebase_token(id_token)
+    if not decoded_token or decoded_token.get('email') != 'admin123@gmail.com':
+        return jsonify({"error": "Unauthorized"}), 401
     # Get all uploads
     uploads = []
     users_ref = db.collection('users')
